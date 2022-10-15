@@ -18,3 +18,36 @@ knitr::opts_chunk$set(
 )
 ```
 
+## Problem 1
+
+
+
+
+## Problem 2
+```{r prob 2 part 1}
+accel_data = read_csv("./accel_data.csv") %>% 
+  janitor::clean_names() %>% 
+  mutate(day_type = ifelse(day == "Saturday" | day == "Sunday", "weekend", "weekday")) %>% 
+  relocate(day_type, .after = day) %>% 
+  pivot_longer(activity_1:activity_1440,
+               names_to = "minute",
+               names_prefix = "activity_",
+               values_to = "activity_count") %>% 
+  mutate(minute = as.numeric(minute))
+```
+This dataset describes five weeks of accelerometer data collected from a 63 year old male with BMI 25. Activity counts were collected each minute of the days. The tidied dataset has 50,400 observations across six variables: the week and day of data collection (day is listed numerically, by day of the week, and classified as a weekday or weekend), the minute of the day the activity count was collected, and the activity count.
+
+```{r prob 2 part 2}
+accel_data_sum = accel_data %>% 
+  group_by(week, day) %>% 
+  summarise(day_activity_total = sum(activity_count)) %>% 
+  pivot_wider(
+    names_from = day,
+    values_from = day_activity_total
+  ) %>% select("week", "Monday","Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
+
+accel_data_sum %>% group_by() %>% 
+  summarise(across(Monday:Sunday, mean)) %>% view()
+```
+
+On average, Saturdays had the lowest activity counts for the individual. Wednesdays - Fridays had the highest.
