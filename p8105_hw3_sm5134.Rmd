@@ -43,8 +43,8 @@ accel_data_sum = accel_data %>%
   summarise(day_activity_total = sum(activity_count)) %>% 
   pivot_wider(
     names_from = day,
-    values_from = day_activity_total
-  ) %>% select("week", "Monday","Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
+    values_from = day_activity_total) %>% 
+  select("week", "Monday","Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
 
 accel_data_sum %>% group_by() %>% 
   summarise(across(Monday:Sunday, mean)) %>% view()
@@ -63,13 +63,13 @@ From this plot, we can see that most activity for this person took place between
 
 ## Problem 3
 
-```{r}
+```{r prob 3 part 0}
 library(p8105.datasets)
 data("ny_noaa") 
 ```
 This dataset has 2,595,176 observations across 7 variables. It contains data from all New York state weather stations across 5 metrics: precipitation, snowfall, snow depth, maximum temperature, and minimum temperature. It also includes date of observation and the id number of the weather station. There are large amounts of missing observations across all 5 of the measurement metrics.
 
-```{r}
+```{r prob 3 part 1}
 ny_noaa = ny_noaa %>% 
   separate(date, into = c("year", "month", "day"), sep = "-", convert = TRUE) %>% 
   mutate(tmax = as.numeric(tmax)/10, 
@@ -80,3 +80,18 @@ table(ny_noaa$snow)
 sort(table(ny_noaa$snow), decreasing = TRUE) %>% view()
 ```
 The most commonly observed value for snowfall is 0mm due to the fact that the snowy season is mainly concentrated in a few months (Dec-Feb) (and even then it doesn't snow every day).
+
+
+```{r prob 3 part 2}
+ny_noaa %>% 
+  filter(month == 1 | month == 7) %>% mutate(month = case_when(month == 1 ~ "January",
+                                                               month == 7 ~ "July")) %>% 
+  group_by(id, year, month) %>% 
+  mutate(avgtmax = mean(tmax)) %>% 
+  ggplot(aes(x = year, y = avgtmax)) + geom_line(aes(color = id), alpha = 0.5) + facet_grid(.~ month) + theme(legend.position = "none") + labs(
+  title = "Average Max. Temperature by Month per Station",
+  x = "Time",
+  y = "Average Max. Temp"
+)
+```
+From the plots, we can see that the average temperature in January is ~27 degrees lower than the average temperature in July. The temperatures in January generally range between around -10 to 10 degrees Celsius, and in July, the temperatures generally range from 20-35 degrees Celcius. In July, we can see one obvious outlier where in ~1988 one station recorded temperatures around 15 degrees.
