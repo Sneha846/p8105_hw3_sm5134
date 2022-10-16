@@ -51,3 +51,45 @@ accel_data_sum %>% group_by() %>%
 ```
 
 On average, Saturdays had the lowest activity counts for the individual. Wednesdays - Fridays had the highest.
+
+```{r prob 2 part 3}
+accel_data  = accel_data %>% 
+  mutate(hour = case_when(minute <=60 ~ 1, 
+                          minute <=120 ~ 2,
+                          minute <=180 ~ 3, 
+                          minute <=240 ~ 4,
+                          minute <=300 ~ 5,
+                          minute <=360 ~ 6,
+                          minute <=420 ~ 7,
+                          minute <=480 ~ 8,
+                          minute <=540 ~ 9,
+                          minute <=600 ~ 10,
+                          minute <=660 ~ 11,
+                          minute <=720 ~ 12,
+                          minute <=780 ~ 13,
+                          minute <=840 ~ 14,
+                          minute <=900 ~ 15))
+accel_data_hour = aggregate(accel_data$activity_score ~ hour, data = accel_data, FUN = sum)
+
+ggplot(accel_data, aes(x = minute, y = activity_count)) + geom_point(aes(color = day))
+```
+
+## Problem 3
+
+```{r}
+library(p8105.datasets)
+data("ny_noaa") 
+```
+This dataset has 2,595,176 observations across 7 variables. It contains data from all New York state weather stations across 5 metrics: precipitation, snowfall, snow depth, maximum temperature, and minimum temperature. It also includes date of observation and the id number of the weather station. There are large amounts of missing observations across all 5 of the measurement metrics.
+
+```{r}
+ny_noaa = ny_noaa %>% 
+  separate(date, into = c("year", "month", "day"), sep = "-", convert = TRUE) %>% 
+  mutate(tmax = as.numeric(tmax)/10, 
+         tmin = as.numeric(tmin)/10,
+         prcp = prcp/10)
+
+table(ny_noaa$snow)
+sort(table(ny_noaa$snow), decreasing = TRUE) %>% view()
+```
+The most commonly observed value for snowfall is 0mm due to the fact that the snowy season is mainly concentrated in a few months (Dec-Feb) (and even then it doesn't snow every day)
