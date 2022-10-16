@@ -53,26 +53,13 @@ accel_data_sum %>% group_by() %>%
 On average, Saturdays had the lowest activity counts for the individual. Wednesdays - Fridays had the highest.
 
 ```{r prob 2 part 3}
-accel_data  = accel_data %>% 
-  mutate(hour = case_when(minute <=60 ~ 1, 
-                          minute <=120 ~ 2,
-                          minute <=180 ~ 3, 
-                          minute <=240 ~ 4,
-                          minute <=300 ~ 5,
-                          minute <=360 ~ 6,
-                          minute <=420 ~ 7,
-                          minute <=480 ~ 8,
-                          minute <=540 ~ 9,
-                          minute <=600 ~ 10,
-                          minute <=660 ~ 11,
-                          minute <=720 ~ 12,
-                          minute <=780 ~ 13,
-                          minute <=840 ~ 14,
-                          minute <=900 ~ 15))
-accel_data_hour = aggregate(accel_data$activity_score ~ hour, data = accel_data, FUN = sum)
-
-ggplot(accel_data, aes(x = minute, y = activity_count)) + geom_point(aes(color = day))
+ggplot(accel_data, aes(x = minute/60, y = activity_count)) + geom_point(aes(color = day), alpha = 0.5) + geom_smooth() + labs(
+  title = "Daily Activity Levels",
+  x = "Hour",
+  y = "Activity Count"
+)
 ```
+From this plot, we can see that most activity for this person took place between ~8:00 - ~21:00 hours each day. Activity dipped quite sharply at around 21:00 hours each day and gradually rose from ~5:00 to ~9:00 hours and mostly plateaued for the middle part of each day.
 
 ## Problem 3
 
@@ -92,4 +79,4 @@ ny_noaa = ny_noaa %>%
 table(ny_noaa$snow)
 sort(table(ny_noaa$snow), decreasing = TRUE) %>% view()
 ```
-The most commonly observed value for snowfall is 0mm due to the fact that the snowy season is mainly concentrated in a few months (Dec-Feb) (and even then it doesn't snow every day)
+The most commonly observed value for snowfall is 0mm due to the fact that the snowy season is mainly concentrated in a few months (Dec-Feb) (and even then it doesn't snow every day).
