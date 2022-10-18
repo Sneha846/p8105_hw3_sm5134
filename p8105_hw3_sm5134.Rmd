@@ -80,7 +80,7 @@ instacart %>%
   spread(key = order_dow, value = mean_hour) %>%
   knitr::kable(digits = 2)
 ```
-Generally speaking, Pink Lady Apples are purchased earlier in the day than Coffee Ice Cream.
+Generally speaking, Pink Lady Apples are purchased earlier in the day than Coffee Ice Cream except for on Day 5
 
 ## Problem 2
 ```{r prob 2 part 1}
@@ -174,4 +174,5 @@ snowfall
 
 min_max + snowfall
 ```
-Within the time range, the highest number of days had a minimum temperature between ~0-15 degrees Celsius and a maximum temperature between ~0-30 degrees. Across the time range, the most common level of snowfall measured per day was between 0-30 mm. There was also a peak around 40-50mm. 
+
+Within the time range, the highest number of days had a minimum temperature between roughly 0-15 degrees Celsius and a maximum temperature between roughly 0-30 degrees. Across the time range, the most common level of snowfall measured per day was between 0-30 mm. There was also a peak around 40-50mm. 
