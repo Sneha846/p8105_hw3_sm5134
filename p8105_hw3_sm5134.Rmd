@@ -61,10 +61,26 @@ instacart %>%
 This plot shows all the aisles with at least 10,000 items bought from them. Most aisles have 40,000 items or less purchased from them.
 
 ```{r prob 1 part 3}
-
+instacart %>% 
+  filter(aisle %in% c("baking ingredients", "dog food care", "packaged vegetables fruits")) %>%
+  group_by(aisle) %>% 
+  count(product_name) %>% 
+  mutate(rank = min_rank(desc(n))) %>% 
+  filter(rank < 4) %>% 
+  arrange(desc(n)) %>%
+  knitr::kable()
 ```
+The most popular items from the packaged vegetables & fruits, baking ingredients, and dog food care aisles are organic baby spinach (purchased 9784 times), light brown sugar (499 times), and Snack Sticks Chicken & Rice Recipe Dog Treats (30 times) respectively.
 
-
+```{r prob 1 part 4}
+instacart %>%
+  filter(product_name %in% c("Pink Lady Apples", "Coffee Ice Cream")) %>%
+  group_by(product_name, order_dow) %>%
+  summarize(mean_hour = mean(order_hour_of_day)) %>%
+  spread(key = order_dow, value = mean_hour) %>%
+  knitr::kable(digits = 2)
+```
+Generally speaking, Pink Lady Apples are purchased earlier in the day than Coffee Ice Cream.
 
 ## Problem 2
 ```{r prob 2 part 1}
