@@ -18,10 +18,51 @@ knitr::opts_chunk$set(
   fig.height = 6,
   out.width = "90%"
 )
+
+theme_set(theme_minimal() + theme(legend.position = "bottom"))
+
+options(
+  ggplot2.continuous.colour = "viridis",
+  ggplot2.continuous.fill = "viridis"
+)
+
+scale_colour_discrete = scale_colour_viridis_d
+scale_fill_discrete = scale_fill_viridis_d
 ```
 
 ## Problem 1
+```{r prob 1}
+data("instacart")
 
+instacart = 
+  instacart %>% 
+  as_tibble(instacart)
+```
+
+This dataset includes 1,384,617 observations across 15 variables. It describes orders placed on Instacart by 131,209 unique customers. Variables in the dataset include the time each order was placed (day of the week and hour of the day), names of products in the order, isle and department products are found (number and name (i.e., soft drinks, dairy, produce, household goods)), and days since last order.
+
+```{r prob 1 part 1}
+instacart %>% 
+  count(aisle) %>% 
+  arrange(desc(n)) %>% view()
+```
+There are 134 aisles. The aisles with the most number of items ordered are fresh vegetables and fresh fruits at 150609 and 150473 items respectively.
+
+```{r prob 1 part 2}
+instacart %>% 
+  count(aisle) %>% 
+  filter(n > 10000) %>% 
+  mutate(aisle = fct_reorder(aisle, n)) %>% 
+  ggplot(aes(x = aisle, y = n)) + 
+  geom_point() + 
+  labs(title = "Number of items ordered in each aisle") +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1))
+```
+This plot shows all the aisles with at least 10,000 items bought from them. Most aisles have 40,000 items or less purchased from them.
+
+```{r prob 1 part 3}
+
+```
 
 
 
@@ -117,4 +158,4 @@ snowfall
 
 min_max + snowfall
 ```
-Within the time range, the highest number of days had a minimum temperature between ~0-15 degrees Celsius and a maximum temperature between ~0-30 degrees. Across the time range, the most common level of snowfall measured per day was between 0-30 mm.
+Within the time range, the highest number of days had a minimum temperature between ~0-15 degrees Celsius and a maximum temperature between ~0-30 degrees. Across the time range, the most common level of snowfall measured per day was between 0-30 mm. There was also a peak around 40-50mm. 
