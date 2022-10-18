@@ -8,6 +8,8 @@ output: github_document
 ```{r setup, include=FALSE}
 library(tidyverse)
 library(p8105.datasets)
+library(patchwork)
+library(ggridges)
 
 knitr::opts_chunk$set(
 	echo = TRUE,
@@ -53,7 +55,7 @@ accel_data_sum %>% group_by() %>%
 On average, Saturdays had the lowest activity counts for the individual. Wednesdays - Fridays had the highest.
 
 ```{r prob 2 part 3}
-ggplot(accel_data, aes(x = minute/60, y = activity_count)) + geom_point(aes(color = day), alpha = 0.5) + geom_smooth() + labs(
+ggplot(accel_data, aes(x = minute/60, y = activity_count)) + geom_line(aes(color = day)) + geom_point(aes(color = day), alpha = 0.5) + geom_smooth() + labs(
   title = "Daily Activity Levels",
   x = "Hour",
   y = "Activity Count"
@@ -95,3 +97,24 @@ ny_noaa %>%
 )
 ```
 From the plots, we can see that the average temperature in January is ~27 degrees lower than the average temperature in July. The temperatures in January generally range between around -10 to 10 degrees Celsius, and in July, the temperatures generally range from 20-35 degrees Celcius. In July, we can see one obvious outlier where in ~1988 one station recorded temperatures around 15 degrees.
+
+```{r prob 3 part 3}
+min_max = ggplot(ny_noaa, aes(x = tmin, y = tmax)) + geom_hex() + labs(
+  x = "Minimum Temp",
+  y = "Maximum Temp", 
+  title = "Maximum Temp vs Minimum Temp in New York 1981 - 2010"
+)
+min_max
+
+snowfall = ny_noaa %>% 
+  filter(snow %in% (1:99)) %>% 
+  ggplot(aes(x = snow, y = as.factor(year), group = year)) + geom_density_ridges() + labs(
+    x = "Snowfall(mm)",
+    y = "Year",
+    title = "Snowfall by Year in New York 1981 - 2010"
+  )
+snowfall
+
+min_max + snowfall
+```
+Within the time range, the highest number of days had a minimum temperature between ~0-15 degrees Celsius and a maximum temperature between ~0-30 degrees. Across the time range, the most common level of snowfall measured per day was between 0-30 mm.
